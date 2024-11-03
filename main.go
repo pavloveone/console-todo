@@ -11,27 +11,26 @@ var (
 	addTaskCmd    = "Добавить задачу"
 	showTasksCmd  = "Показать все задачи"
 	removeTaskCmd = "Удалить задачу"
-	updateTaskCmd = "Обновить задачу"
 	unknownCmd    = "Неизвестная команда"
 )
 
 func main() {
+	storage := pkg.Storage{}
 	for {
 		fmt.Println("\nМеню:")
 		fmt.Printf("\n1.%s:", addTaskCmd)
 		fmt.Printf("\n2.%s:", showTasksCmd)
 		fmt.Printf("\n3.%s:", removeTaskCmd)
-		fmt.Printf("\n4.%s:\n", updateTaskCmd)
 
 		choise := pkg.GetUserInput("\nВыберите действие: ")
 
 		switch choise {
 		case showTasksCmd:
-			showAllTasks()
+			showAllTasks(storage)
 		case addTaskCmd:
-			createTask()
+			addTask(storage)
 		case removeTaskCmd:
-			remvoveTask()
+			removeTask(storage)
 		default:
 			fmt.Print(unknownCmd)
 			return
@@ -39,9 +38,9 @@ func main() {
 	}
 }
 
-func showAllTasks() {
-	storage := pkg.Storage{}
-	tasks, err := storage.AllTasks()
+func showAllTasks(s pkg.Storage) {
+
+	tasks, err := s.AllTasks()
 	if err != nil {
 		log.Fatalf("error while get all tasks, %s: ", err.Error())
 	}
@@ -53,8 +52,7 @@ func showAllTasks() {
 	}
 }
 
-func createTask() {
-	storage := pkg.Storage{}
+func addTask(s pkg.Storage) {
 	task := pkg.Task{
 		Done: false,
 	}
@@ -63,16 +61,15 @@ func createTask() {
 	description := pkg.GetUserInput("\nОписание:")
 	task.Description = description
 
-	storage.AddTask(task)
+	s.AddTask(task)
 }
 
-func remvoveTask() {
-	storage := pkg.Storage{}
+func removeTask(s pkg.Storage) {
 
 	id := pkg.GetUserInput("\nВведите номер задачи:")
 	idNum, err := strconv.Atoi(id)
 	if err != nil {
 		fmt.Printf("Введите число")
 	}
-	storage.RemoveTask((idNum))
+	s.RemoveTask((idNum))
 }

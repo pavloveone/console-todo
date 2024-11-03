@@ -72,10 +72,6 @@ func (s *Storage) RemoveTask(taskId int) error {
 	return nil
 }
 
-func (s *Storage) UpdateTask(task Task) error {
-	return nil
-}
-
 func saveTasks(t []Task) error {
 	fName := "todo.txt"
 
